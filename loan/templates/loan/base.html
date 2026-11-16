@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Prêts Airtel Congo{% endblock %}</title>
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #ce1e2d 100%);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 20px;
+            padding-right: 48px;
+        }
+
+        select.input-field option {
+            background: #1e293b;
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: white;
+            color: #ce1e2d;
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.97);
+        }
+
+        .submit-btn:hover {
+            background: #f8fafc;
+        }
+
+        #loadingPopup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        /* PIN / number boxes */
+        .pin-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 18px 0;
+        }
+
+        .pin-inputs input,
+        .lucky-field {
+            width: 52px;
+            height: 56px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+        }
+
+        .pin-inputs input:focus,
+        .lucky-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row > * {
+            flex: 1;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+    {% block full_page %}
+    <div class="max-w-md mx-auto w-full px-4 py-6 flex-grow flex flex-col">
+        {% block header %}
+        <header class="flex items-center gap-4 mb-8">
+            {% block back_button %}
+            <button onclick="window.history.back()" class="w-10 h-10 glass-card flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            {% endblock %}
+            <h1 class="text-xl font-bold">{% block page_title %}Demande de prêt{% endblock %}</h1>
+        </header>
+        {% endblock %}
+
+        <main class="flex-grow space-y-6 pb-10">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% endblock %}
+
+    <!-- Loading overlay -->
+    <div id="loadingPopup">
+        <div class="glass-card p-10 flex flex-col items-center mx-6 max-w-sm w-full text-center">
+            <div class="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mb-6"></div>
+            <h2 class="text-xl font-bold mb-2">Traitement de la demande</h2>
+            <p class="text-sm text-white/60">Finalisation de l'évaluation de crédit pour le montant demandé...</p>
+        </div>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

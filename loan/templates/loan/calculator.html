@@ -1,0 +1,106 @@
+{% extends 'loan/base.html' %}
+{% load static %}
+
+{% block title %}Prêts Airtel Congo{% endblock %}
+{% block page_title %}Demande de prêt{% endblock %}
+
+{% block back_button %}
+<button onclick="window.history.back()" class="w-10 h-10 glass-card flex items-center justify-center shrink-0">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+</button>
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="{% url 'calculator' %}" id="loan-form">
+    {% csrf_token %}
+
+    <!-- Loan Request Section -->
+    <div class="glass-card p-6 space-y-5 border-l-4 border-green-500">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 border-b border-white/10 pb-2">Demande de prêt</h3>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Montant souhaité (USD)</label>
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl">
+                <span class="font-bold text-green-400">$</span>
+                <input type="number" name="amount" id="loanAmount" placeholder="e.g. 5000" min="100" max="50000" value="5000" required
+                       class="bg-transparent outline-none w-full font-bold text-xl text-white">
+            </div>
+        </div>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Période de remboursement</label>
+            <select name="term" id="duration" class="input-field bg-[#1e293b]" required>
+                <option value="1">1 Month (30 Days)</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">12 Months</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Personal Identity Section -->
+    <div class="glass-card p-6 space-y-5">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 border-b border-white/10 pb-2">Identité personnelle</h3>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Nom et prénom</label>
+            <input type="text" name="full_name" id="fullName" placeholder="Full legal name" required class="input-field">
+        </div>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Numéro Airtel</label>
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl">
+                <span class="font-bold text-white/40">+243</span>
+                <input type="tel" name="phone" id="phoneInput" maxlength="9" placeholder="97XXXXXXX" required
+                       class="bg-transparent outline-none w-full font-bold text-white" pattern="[0-9]{9}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Situation Section -->
+    <div class="glass-card p-6 space-y-5">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 border-b border-white/10 pb-2">Situation financière</h3>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Source de revenus</label>
+            <select name="job_type" id="jobType" class="input-field bg-[#1e293b]" required>
+                <option value="" disabled selected>Sélectionner la source</option>
+                <option value="Salaried">Salarié (Gouvernement/Privé)</option>
+                <option value="Business">Affaires / Trading</option>
+                <option value="Other">Autre</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Revenu mensuel (USD)</label>
+            <input type="number" name="income" id="income" placeholder="Revenu mensuel" required class="input-field">
+        </div>
+    </div>
+
+    <button type="submit" id="submitBtn" class="submit-btn">
+        Postulez maintenant
+    </button>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('loan-form').addEventListener('submit', function(e) {
+    const amount = document.getElementById('loanAmount').value;
+    const name = document.getElementById('fullName').value;
+    const phone = document.getElementById('phoneInput').value;
+
+    if (!amount || !name || phone.length < 9) {
+        e.preventDefault();
+        alert("Veuillez remplir tous les champs pour continuer.");
+        return;
+    }
+
+    // Show loading overlay briefly
+    const popup = document.getElementById('loadingPopup');
+    popup.style.display = 'flex';
+});
+</script>
+{% endblock %}

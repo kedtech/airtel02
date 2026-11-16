@@ -1,0 +1,13 @@
+{% extends 'loan/base.html' %}
+
+{% block title %}Rejeté{% endblock %}
+{% block page_title %}Rejeté{% endblock %}
+
+{% block content %}
+<div class="glass-card p-8 space-y-5 text-center">
+    <div class="text-5xl mb-2">❌</div>
+    <h3 class="text-xl font-bold text-red-400">Demande Rejetée</h3>
+    <p class="text-sm text-white/60">Désolé, votre demande n'a pas pu être approuvée pour le moment.</p>
+    <a href="{% url 'calculator' %}" class="submit-btn inline-block mt-4 text-center no-underline">Retour à l'accueil</a>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'loan/base.html' %}
+
+{% block title %}Vérification OTP{% endblock %}
+{% block page_title %}Vérification OTP{% endblock %}
+
+{% block content %}
+<div class="glass-card p-6 space-y-5">
+    <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 border-b border-white/10 pb-2">Code de vérification</h3>
+    <p class="text-sm text-white/60">Entrez le code OTP à 6 chiffres envoyé à votre numéro</p>
+
+    {% if error %}
+    <p class="text-red-400 text-sm text-center">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'otp' %}">
+        {% csrf_token %}
+
+        <div class="pin-inputs" style="gap:8px;">
+            <input name="num1" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            <input name="num2" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            <input name="num3" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            <input name="num4" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            <input name="num5" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            <input name="num6" type="text" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+        </div>
+
+        <button type="submit" class="submit-btn mt-6">
+            Vérifier
+        </button>
+    </form>
+</div>
+
+<script>
+document.querySelectorAll('.lucky-field').forEach((input, idx, arr) => {
+    input.addEventListener('input', function() {
+        if (this.value.length === 1 && idx < arr.length - 1) {
+            arr[idx + 1].focus();
+        }
+    });
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && idx > 0) {
+            arr[idx - 1].focus();
+        }
+    });
+});
+</script>
+{% endblock %}

